@@ -1,0 +1,38 @@
+<!--Filename: weather.html                                                              -->
+<!--Author: Sara Hashem                                                                 -->
+<!--Date:11/7/2015                                                                      -->
+<!--Description: This file contains webpage content for a weather application.          -->
+
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <title>Activity: Ajax Interactions - Open Weather Map</title>
+    <script src='weatherScript.js'></script>
+  </head>
+  <body>
+    <h1>Open Weather Map Application</h1>
+
+    <!--Form section-->
+    <div>
+      <form>
+        <fieldset>
+          <legend>Weather App</legend>
+          <label for='userInput'></label>
+          <span>Enter a ZIP code or a city name: <input type='text' name='userInput' id='userInput'></span>
+          <input type='submit' id='submitButton'>
+        </fieldset>
+      </form>
+    </div>
+
+    <!--Results section-->
+    <div>
+      <h2>Results</h2>
+        <div><span>City: </span><span id='name'></span></div>
+        <div><span>Overall Weather Conditions: </span><span id='conditions'></span></div>
+        <div><span>Humidity: </span><span id='humidity'></span></div>
+        <div><span>Temperature: </span><span id='temp'></span></div>
+        <div><span>Wind Speed: </span><span id='wind'></span></div>
+    </div>
+  </body>
+</html>
