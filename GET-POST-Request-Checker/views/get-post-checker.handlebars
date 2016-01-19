@@ -1,0 +1,7 @@
+<h1>{{this.requestType}} Request Received</h1>
+<p>Your data is listed below:</p>
+<ul>
+ 	{{#each list}}
+	<li>The data item "{{this.key}}" is associated with the value "{{this.value}}".</li>
+	{{/each}}
+</ul>
