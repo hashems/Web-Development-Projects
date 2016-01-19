@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+    	<meta charset="utf-8">
+    	<link rel="stylesheet" type="text/css" href="style.css"/>
+    	<title>Section 5: Getting Time Zones</title>
+  	</head>
+  	<body>
+		<h1>Getting Time Zones</h1>
+		<p>
+			In this section, we will look at the last two sections of our response and how to parse that data.
+		</p>
+
+		<h2>One Last Look</h2>
+		<p>
+			Again, here is the response we got back from our IP address-based request:
+		</p>
+		<div>
+			<pre>
+				<code>
+{
+  "version": "1.2",
+  "url": "http://worldtime.io/current/WzQ3LjYzNDQsIC0xMjIuMzQyMl18LTEyMi4zNDIyfDQ3LjYzNDQ%3D",
+  "location": {
+	"region": "United States",
+	"latitude": 47.6344,
+	"longitude": -122.3422
+  },
+  "summary": {
+	"utc": "2015-11-26 05:58:04",
+	"local": "2015-11-25 21:58:04",
+	"hasDst": true
+  },
+  "current": {
+	"abbreviation": "PST",
+	"description": "Pacific Standard Time",
+	"utcOffset": "-8:00",
+	"isDst": false,
+	"effectiveUntil": "2016-03-13 02:00:00"
+  },
+  "next": {
+	"abbreviation": "PDT",
+	"description": "Pacific Daylight Time",
+	"utcOffset": "-7:00",
+	"isDst": true,
+	"effectiveUntil": "2016-11-06 02:00:00"
+  }
+}
+				</code>
+			</pre>
+		</div>
+
+		<h2>Current</h2>
+		<p>
+			This section of the response is an object containing nformation on the current time zone of the requested location. Let's walk through it step-by-step.
+		</p>
+		<p>
+			<code>abbreviation</code> is set to a string that is a standardized abbreviation of the current time zone. This very useful when determining when to make international calls or set meetings from a given set or database of regions based on their time zones. Because time zone abbreviations are standardized, comparing their abbreviations and making decisions within your program is made easy. For example, you could compare the string <code>"PST"</code> to another string representing an abbreviated time zone to build a decision structure within your application.
+		</p>
+		<p>
+			And just in case you don't understand what those three letters mean, or you don't feel like looking it up, our response also provides us with a more human friendly <code>description</code> as of the current time zone as a string. Although you could also use this string to build decision structures, I would recommend sticking to the more computer friendly abbreviated version to keep the bugs out.
+		</p>
+		<p>
+			<code>utcOffset</code> indicates how many hours off from the UTC standard time the current time zone is. This is another value you probably won't use as it is compared to a single region's time and is therefore not relative.
+		</p>
+		<p>
+			<code>isDst</code> is set to a boolean value indicating whether or not the time zone is adjusted for Daylight Savings Time. <code>true</code> indicates that it is set for Daylight Savings Time and <code>false</code> indicates that it is not. For regions that do not observe Daylight Savings Time, this particular key-value pair is omitted.
+		</p>
+		<p>
+			<code>effectiveUntil</code> is associated with string containing a date in YYYY-MM-DD format followed by a time stamp in local time. The string indicates the last day and time (precise to the second) for which the current time zone will be in effective. As clocks are always adjusted after the stroke of midnight, our response shows us that the current time zone will expire at exactly 2:00 am on March 13th, 2016. For regions that do not observe Daylight Savings Time, this information is omitted.
+		</p>
+
+		<h2>Next</h2>
+		<p>
+			This section of the response contains all of the same information in the <code>current</code> object but for the region's next time zone. For example, after 2:00 am on March 13th, 2016, the current time zone for the region in our example will switch from <code>Pacific Standard Time</code> to <code>Pacific Daylight Time</code>.
+		</p>
+		<p>
+			For regions that do not observe Daylight Savings Time, the object labeled <code>next</code> will be completely omitted.
+		</p>
+
+		<h2>Parsing Data</h2>
+		<p>
+			Just like we discussed in the previous section, parsing data from responses is fairly straightforward. You can use the <code>stringify()</code> method or dot notation to access the information in the objects returned from the server.
+		</p>
+
+		<h2>Dates and Times in JavaScript</h2>
+		<p>
+			In the next section, we'll discuss how to use JavaScript to handle the very special values that represent dates and times.
+		</p>
+
+		<div>
+			<span><a href='section4.html'>Section 4: Getting Time Zones</a></span><span> --- </span><span><a href='section6.html'>Section 6: JavaScript Dates and Times</a></span>
+		</div>
+  	</body>
+</html>

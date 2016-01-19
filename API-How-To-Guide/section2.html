@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+    	<meta charset="utf-8">
+    	<link rel="stylesheet" type="text/css" href="style.css"/>
+    	<title>Section 2: Location-Based Requests</title>
+  	</head>
+  	<body>
+		<h1>Location-Based Requests</h1>
+		<p>
+			World Time Engine offers two different ways access local time data: by location or by IP address. This section will cover making requests via geographical location.
+		</p>
+
+		<h2>HTTP GET Requests</h2>
+		<p>
+			HTTP GET requests return JSON formatted responses. In order to make a request, use the following URL:
+		</p>
+		<div>
+			<code>
+https://worldtimeiodeveloper.p.mashape.com/geo?latitude=LAT&longitude=LONG
+			</code>
+		</div>
+		<p>
+			Notice that you must use the <code>https</code> request protocol in order to make a request. <code>LAT</code> and <code>LONG</code> should be replaced with the latitude and longitude coordinates of the geographical location for which you'd like to look up the local time. Also note the absence of an API key concatenated to the URL. Because billing is based on the number of calls made per key, this information must be sent as a header value when making requests.
+		</p>
+
+		<h2>Using Your API Key to Make Requests</h2>
+		<p>
+			This is another fault in the official documentation, at least for shiny new developers like myself. In order to make calls properly, you must send the following header key-value pair along with URL in the form of: <code>X-Mashape-Key: APIkey</code>
+		</p>
+
+		<h3>Error Messages</h3>
+		<p>
+			If you attempt to make requests without sending the API key to authorize your request, you will get a 401 Unauthorized error message that looks similar to the following:
+		</p>
+		<div>
+			<pre>
+				<code>
+{
+  "message":"Missing Mashape application key. Go to http:\/\/docs.mashape.com\/api-keys to learn how to get your API application key."
+}
+				</code>
+			</pre>
+		</div>
+		<p>
+			If you attempt to make requests with an invalid API key (maybe you copied and pasted it wrong or it's expired), you will get a 403 Forbidden error message that looks like this:
+		</p>
+		<div>
+			<pre>
+				<code>
+{
+  message: "Invalid Mashape Key"
+}
+				</code>
+			</pre>
+		</div>
+
+		<h2>What's the Time in San Francisco?</h2>
+		<p>
+			Let's take a look at a real world example. Consider my future home, the lovely city of San Francisco. Let's use the World Time Engine to find the current local time there.
+		</p>
+		<p>
+			First, we need to get the geographical coordinates for San Francisco. After some quick work on your favorite search engine, you should come up with 37.7833N, 122.4167W. That was easy!
+		</p>
+		<p>
+			One very important detail that is omitted from the official documentation is how cardinal directions are represented in the GET request URL. South (S) and West (W) are both denoted by a minus (<code>-</code>) sign while North (N) and East (E) are denoted by the absence of a sign.
+		</p>
+		<p>
+			So, we need to use the coordinates <code>37.7833</code>, <code>-122.4167</code> to come up with the following URL:
+		</p>
+		<div>
+			<pre>
+				<code>
+					https://worldtimeiodeveloper.p.mashape.com/geo?latitude=37.7833&longitude=-122.4167
+				</code>
+			</pre>
+		</div>
+
+		<h3>Readability and Ease of Use</h3>
+		<p>
+			It's best to round to four decimal places for both accuracy and keep your URL from getting too unwieldy. You can also save these values as variables and substitute them within the URL if you find yourself making multiple requests for the same location. Of course, if your coordinates aren't precise enough, you run the risk of receiving inaccurate data from your request.
+		</p>
+
+		<h2>Front End Implementation</h2>
+		<p>
+			Now, let's make a complete GET request! If you already have a front end application set up, make sure you've set up and configured the modules you'll be using such as Express or Handlebars and, of course, your Request object. You will also need to send your API key as a request header along with your request. Ultimately, your request will look something like this:
+		</p>
+		<div>
+			<pre>
+				<code>
+request({
+  'url':'https://worldtimeiodeveloper.p.mashape.com/geo?latitude=37.7833&longitude=-122.4167',
+  'method':'GET',
+  'headers':{
+    'Content-Type':'application/json',
+    'X-Mashape-Key':'APIkey'}
+}, function(err, response, body){
+  if(!err && response.statusCode < 400){
+    console.log(body);
+  }
+  else{
+    console.log(response.statusCode);
+  }
+});
+				</code>
+			</pre>
+		</div>
+		<p>
+			In the above code block, <code>Content-Type</code> and the API key are sent as a request headers. This string <code>X-Mashape-Key</code> is not arbitrary, so be sure to spell it correctly. Note that this request has some built in error handling. Feel free to adjust your error handlers based on the specific error codes mentioned above or the desired behavior you wish to achieve.
+		</p>
+
+		<h2>Back End Implementation</h2>
+		<p>
+			If you are not interested in using a front end application and simply want to test the back end functionality of these requests, you are free to use any of the many HTTP request makers online. I would recommend <a href='https://www.hurl.it/'>Hurl.it</a> for it's user friendly interface. Simply select the GET method, copy the URL into the address bar, add the <code>X-Mashape-Key: APIkey</code>, verify that you're not a robot, and hit "Launch Request".
+		</p>
+
+		<h2>The Response</h2>
+		<p>
+			From the above examples, you should get something very similar to the following response:
+		</p>
+		<div>
+			<pre>
+				<code>
+{
+  "version": "1.2",
+  "url": "http://worldtime.io/current/WzM3Ljc4MzMsIC0xMjIuNDE2N118LTEyMi40MTY3fDM3Ljc4MzM%3D",
+  "location": {
+    "region": "United States",
+	"latitude": 37.7833,
+	"longitude": -122.4167
+  },
+  "summary": {
+    "utc": "2015-11-25 16:45:31",
+	"local": "2015-11-25 08:45:31",
+	"hasDst": true
+  },
+  "current": {
+    "abbreviation": "PST",
+	"description": "Pacific Standard Time",
+	"utcOffset": "-8:00",
+	"isDst": false,
+	"effectiveUntil": "2016-03-13 02:00:00"
+  },
+  "next": {
+	"abbreviation": "PDT",
+	"description": "Pacific Daylight Time",
+	"utcOffset": "-7:00",
+	"isDst": true,
+	"effectiveUntil": "2016-11-06 02:00:00"
+  }
+}
+				</code>
+			</pre>
+		</div>
+
+		<p>
+			In Section 4, we will discuss the response in detail.
+		</p>
+		<p>
+			Now, that you're comfortable making location-based requests, let's move on the IP address-based requests.
+		</p>
+
+		<div>
+			<span><a href='section1.html'>Section 1: Obtaining an API Key</a></span><span> --- </span><span><a href='section3.html'>Section 3: IP Address-Based Requests</a></span>
+		</div>
+  	</body>
+</html>

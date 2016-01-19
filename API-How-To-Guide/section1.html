@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+    	<meta charset="utf-8">
+    	<link rel="stylesheet" type="text/css" href="style.css"/>
+    	<title>Section 1: API Key</title>
+  	</head>
+  	<body>
+		<h1>Obtaining an API Key</h1>
+		<p>
+			In order to use this particular API, you first need to register through World Time Engine's hosting partner, MashApe, Inc. Because Mashape is a third-party host, this process is a bit involved. There are 3 basic steps to setting up access:
+		</p>
+		<ul>
+			<li>Logging into Mashape</li>
+			<li>Subscribing to a Payment Plan</li>
+			<li>Getting the <em>Key</em> to the Castle</li>
+		</ul>
+
+		<h2>Mashape Login</h2>
+		<p>
+			First, navigate to <a href='https://market.mashape.com/'>Mashape's login page</a>. In the top right corner, either login with an existing account or sign up for a new account. You should see something very similar to the following pop up:
+		</p>
+		<p>
+			<img src='mashapeSignUp.jpg'>
+		</p>
+
+		<h2>Subscribe</h2>
+		<p>
+			Once your account is set up and you're logged in, you'll need to subscribe for one of the three options. In order to locate these options, you can search for "World Time Engine Developer" through the search bar and click on the <a href='https://market.mashape.com/worldtimeengine/worldtime-io-developer/pricing'>Pricing</a> tab. You should see the following page:
+		</p>
+		<p>
+			<img src='subscribe.jpg'>
+		</p>
+		<p>
+			Of course, the more costly the subscription the more queries you're permitted per month. Although the Basic subscription is free for 2,000 queries per month, you will still be asked to enter billing information.
+		</p>
+
+		<h2>Give Me The Key Already!</h2>
+		<p>
+			Finally, click on the Applications tab at the top of the page. You should have a "Default Application" already in your list. Click the link to navigate to our final set up page. Depending on how many you're currently using through Mashape, you will see icons for each of your APIs which track your usage. In the right corner just below your avatar, you will see a "GET THE KEYS" button. Once you click it, you should see the following:
+		</p>
+		<p>
+			<img src='key.jpg'>
+		</p>
+		<p>
+			You can either choose to create a key for testing or production purposes. Be aware that Mashape does not track data for testing key types, so I would recommend starting with this key type while you're still perfecting your application.
+		</p>
+
+		<h3>A Note on Security and Organization</h3>
+		<p>
+			Because billing is involved with this particular API, I would highly recommend keeping your API key private. You can manage this in a couple of different ways. One way is to save your key as a variable and substitute the actual key value for the variable name. This is the method I will be using throughout this guide, so wherever you see <code>APIkey</code>, simply substitute your own key. Another, more secure method is to save your key in a separate static file and simply include the file name where you would otherwise include the key itself.
+		</p>
+
+		<h2>Onwards and Upwards</h2>
+		<p>
+			Now that we're all set up, let's start making requests!
+		</p>
+
+		<div>
+			<span><a href='home.html'>Home</a></span><span> --- </span><span><a href='section2.html'>Section 2: Location-Based Requests</a></span>
+		</div>
+  	</body>
+</html>

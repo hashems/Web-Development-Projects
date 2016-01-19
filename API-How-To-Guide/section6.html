@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+    	<meta charset="utf-8">
+    	<link rel="stylesheet" type="text/css" href="style.css"/>
+    	<title>Section 6: JavaScript Dates and Times</title>
+  	</head>
+  	<body>
+  		<h1>Getting Time Zones</h1>
+		<p>
+			In this final section, we will look at the various methods JavaScript has for dealing with date and time information.
+		</p>
+
+		<h2>It's a Date!</h2>
+		<p>
+			JavaScript allows you to create new Date objects using <code>Date()</code>. Creating a new Date object without any parameters will return the current date and time. There are many useful methods associated with Date object, but we will only look at a few that are directly relevant to the information returned by our API. You can find a more complete reference <a href='http://www.w3schools.com/jsref/jsref_obj_date.asp'>here</a>.
+		</p>
+		<p>
+			For our purposes, we will be discussing the following Date object methods:
+			<ul>
+				<li><code>getTimeZoneOffset()</code></li>
+				<li><code>toJSON()</code></li>
+				<li><code>toString()</code></li>
+			</ul>
+		</p>
+
+		<h2>Getting Time Zone Offset</h2>
+		<p>
+			In the last section, recall how we were given UTC offsets for current and next time zones. These refer to the number of hours in either direction the local time deviates from Universal Coordinated Time. You can use the method <code>getTimeZoneOffset()</code> to compare time zones. This method returns the UTC offset in minutes, so yo properly compare this value to the value in your response, you will need to divide by 60. Notice that the sign is preserved after the division. Below is an example of how we might get the UTC offset of a given date and compare it to the response we got back from a request:
+		</p>
+		<div>
+			<pre>
+				<code>
+var sampleDate = new Date();
+var sampleOffset = sampleData.getTimeZoneOffset();
+sampleOffset /= 60;
+if(sampleOffset == sampleResponse.current.utcOffset){
+  // Do something based on matching time zones
+}
+				</code>
+			</pre>
+		</div>
+
+		<h2>JSON Formatted Dates</h2>
+		<p>
+			Converting Date object strings to JSON format can be very useful moving date strings with other JSON formatted data. <code>toJSON()</code> returns a Date object string in JSON format. If you look closely at the repsonses we got back from our requests, you will notice how similar the formats of the dates and times are to the standard JSON format (<code>YYYY-MM-DDTHH:mm:ss.sssZ</code>). This format is in UTC time. Below is an example of this method in action:
+		</p>
+		<div>
+			<pre>
+				<code>
+var sampleDate = new Date();
+var sampleJSONDate = sampleData.toJSON();
+				</code>
+			</pre>
+		</div>
+		<p>
+			The above lines of code might return something similar to <code>2015-11-30T16:51:54.927Z</code>. Compared to the UTC time we got back from our IP address-based request (<code>2015-11-26 05:58:04</code>), you can see how you might go about comparing dates, times, or both to creat decision structures similar to the previous Date object method example.
+		</p>
+		<p>
+ 			It is important to note the <code>T</code> and <code>Z</code> characters in the JSON format. <code>T</code> indicates the starting position of the time, while <code>Z</code> indicates that the date and time are in UTC time.
+		</p>
+
+		<h2>Date Strings</h2>
+		<p>
+			UTC time and JSON formatting is all well and good for computers, but what if you want a more human friendly string to look at? <code>toString()</code> returns the day, date, time, UTC offset, and time zone of a Date object as a string. In fact, this is JavaScript's default method for displaying Date objects as strings. You would use this method as follows:
+		</p>
+		<div>
+			<pre>
+				<code>
+var sampleDate = new Date();
+var sampleJSONDate = sampleData.toString();
+				</code>
+			</pre>
+		</div>
+		<p>
+			The lines above might return something like Tue Dec 01 2015 02:05:56 GMT+0900 (Korea Standard Time). One important thing to note is that the date and time are both local.
+		</p>
+
+		<h3>GMT Versus UTC</h3>
+		<p>
+			GMT, or Greenwich Mean Time, was the old standard for calculating and coordinating the world's time zones. You might find that some of the methods still use GMT as a point of reference, such as the <code>toString()</code> method we just looked at. However, keep in mind that JavaScript methods which rely on the old standard might become deprecated as the world makes the shift towards the newer UTC standard. For all human intents and purposes however, GMT and UTC essentially represent the same thing.
+		</p>
+
+		<h2>Making the Most of It All</h2>
+		<p>
+			Hopefully, these examples have given you a little insight about how to use the data you receive from this API to make comparisons, parse, and manipulate date and time data either from different GET request responses or other date and time data sets.
+		</p>
+
+  		<h2>Time's Up</h2>
+		<p>
+			That wraps up this guide of the World Time Engine API. I hope you found this guide useful. Thanks for reading.
+		</p>
+
+		<div>
+			<span><a href='section5'>Section 5: Getting Time Zones</a></span>
+		</div>
+  	</body>
+</html>

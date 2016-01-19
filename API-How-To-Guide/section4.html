@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+    	<meta charset="utf-8">
+    	<link rel="stylesheet" type="text/css" href="style.css"/>
+    	<title>Section 4: Getting Local Time</title>
+  	</head>
+  	<body>
+		<h1>Getting Local Time</h1>
+		<p>
+			In this section, we will take a look at how to parse the local time from the JSON formatted response returned from either type of request. This is one area in which you might find the original documention for this API sorely lacking. Lucky for you, I'm going to walk you through it all!
+		</p>
+
+		<h2>What Does it All Mean?</h2>
+		<p>
+			Let's look back at the response we received from our IP address-based request and break it down piece by piece.
+		</p>
+		<div>
+			<pre>
+				<code>
+{
+  "version": "1.2",
+  "url": "http://worldtime.io/current/WzQ3LjYzNDQsIC0xMjIuMzQyMl18LTEyMi4zNDIyfDQ3LjYzNDQ%3D",
+  "location": {
+	"region": "United States",
+	"latitude": 47.6344,
+	"longitude": -122.3422
+  },
+  "summary": {
+	"utc": "2015-11-26 05:58:04",
+	"local": "2015-11-25 21:58:04",
+	"hasDst": true
+  },
+  "current": {
+	"abbreviation": "PST",
+	"description": "Pacific Standard Time",
+	"utcOffset": "-8:00",
+	"isDst": false,
+	"effectiveUntil": "2016-03-13 02:00:00"
+  },
+  "next": {
+	"abbreviation": "PDT",
+	"description": "Pacific Daylight Time",
+	"utcOffset": "-7:00",
+	"isDst": true,
+	"effectiveUntil": "2016-11-06 02:00:00"
+  }
+}
+				</code>
+			</pre>
+		</div>
+		<p>
+			The repsonse can be broken up into 6 main sections:
+			<ol>
+				<li><code>version</code></li>
+				<li><code>url</code></li>
+				<li><code>location</code></li>
+				<li><code>summary</code></li>
+				<li><code>current</code></li>
+				<li><code>next</code></li>
+			</ol>
+		</p>
+		<p>
+			This section of the guide will cover only the first four sections of the response. The <a href='section5'>next section</a> of the guide will take a closer look at the last two sections dealing with time zones.
+		</p>
+
+		<h2>Version and URL</h2>
+		<p>
+			There's really not a lot to talk about in the first two sections returned from the request. You can think of them more as FYI values than anything else. 
+		</p>
+		<p>
+			<code>version</code> refers to exactly what you think it would: the current version of the software you're using. We wouldn't ordinarily need this for any reason besides reconciling the differences in responses we might get from calls made with older versions of the software. And, as you can see, this software is realitively new.
+		</p>
+		<p>
+			<code>url</code> is a copy of the URL from which the response is sent. Again, there's not much that can be done with this.
+		</p>
+
+		<h2>Location, Location, Location</h2>
+		<p>
+			In this section of the response, we get some more meaningful values. The <code>location</code> object contains key-value pairs for <code>region</code>, <code>latitude</code>, and <code>longitude</code>. When making location-based requests, these last two items can be an easy way to check that you've made an accurate request. You should get back the same coordinates with which you made the request.
+		</p>
+		<p>
+			For example, recall our first request made about San Francisco. We used the coordinates 37.7833N, 122.4167W in our request URL. Our response gave us back those same coordinates along with a region name within the location object.
+		</p>
+		<div>
+			<pre>
+				<code>
+{
+  ...
+  "location": {
+	"region": "United States",
+	"latitude": 37.7833,
+	"longitude": -122.4167
+	},
+  ...
+}
+				</code>
+			</pre>
+		</div>
+		<p>
+			<code>region</code> identifies a specific geographical location unique to the given location. In most cases, this will be a country name. In both our location and IP address-based examples, we get back <code>"region": "United States"</code> meaning both San Francisco and my IP address are located in the US.
+		</p>
+
+		<h2>It's Time!</h2>
+		<p>
+			Finally, in the fourth section of our response, we get what we've been after this whole time: Current local time! In the <code>summary</code> object, we get back three values: <code>utc</code>, <code>local</code>, and <code>hasDst</code>.
+		</p>
+		<p>
+			<code>utc</code> is associated with string containing a date in YYYY-MM-DD format followed by a UTC standard time stamp.
+
+			UTC refers to Universal Time Coordinated. It is a way for the world's major timing centers to keep their time scales synchronized. It is most often used to compute the offset for time zones around the world. Further down the response in the time zone sections, you will see references to <code>utcOffset</code>. This will be discussed in <a href='section5'>Section 5</a> of this guide.
+		</p>
+		<p>
+			<code>local</code> is associated with a much more useful string also containing a date in YYYY-MM-DD format followed by time stamp in local time. Here, we finally get what we've been making all these requests for in the first place! So, wherever my IP address is in the world, the local date and time was <code>2015-11-25 21:58:04</code> when the request was made.
+		</p>
+
+		<h3>24-Hour Format</h3>
+		<p>
+			But wait! Why does it say it was 21 o'clock? My watch only goes up to 12. Both UTC and local times are returned in 24-hour formats. This means you must convert the hours between 13 and 24 to 12-hour format if you choose to use that standard. This is managed easily enough by subtracting 12. For example, if we converted the local time in our response using this method, we'd see that the local time was 9:58 pm.
+		</p>
+
+		<h2>Daylight Savings Time</h2>
+		<p>
+			<code>hasDst</code> is associated with a boolean value that indicates whether the region observers Daylight Savings Time. <code>true</code> indicates that it does and <code>false</code> indicates that it is does not.
+		</p>
+		<p>
+			This is a very important value to test for if you're building an international meeting planner. Keep in mind that some regions do not observe Daylight Savings Time at all. For these regions, you can expect to find <code>"hasDst": false</code>.
+		</p>
+
+		<h2>Parsing Data</h2>
+		<p>
+			Just like with any JSON object, parsing this data can be done using dot notation or the <code>stringify()</code> method. For example, if you wanted to do something for all locations in the northern hemisphere, you could use something like the following:
+		</p>
+		<div>
+			<code>
+if(response.location.latitude >= 0){
+  // Do something for northern hemisphere locations only
+}
+			</code>
+		</div>
+
+		<h2>Time Zones</h2>
+		<p>
+			Now that we've finally found a way to access the local time and manipulate data based on the values we received back from the server, let's move on to the last two sections of the response dealing with time zones.
+		</p>
+
+		<div>
+			<span><a href='section3.html'>Section 3: IP Address-Based Requests</a></span><span> --- </span><span><a href='section5.html'>Section 5: Getting Time Zones</a></span>
+		</div>
+  	</body>
+</html>
